@@ -12,14 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.imie.videodb.dto.FilmDTO;
+import fr.imie.videodb.exception.VideoDBPersistenceException;
 
 /**
  * @author imie
  *
  */
-public class FilmDAO {
+public class FilmDAO implements IFilmDAO {
 
-	public List<FilmDTO> findAllFilm() {
+	/* (non-Javadoc)
+	 * @see fr.imie.videodb.dao.IFilmDAO#findAllFilm()
+	 */
+	@Override
+	public List<FilmDTO> findAllFilm() throws VideoDBPersistenceException {
 		List<FilmDTO> retour = new ArrayList<FilmDTO>();
 
 		Connection connection = null;
@@ -30,7 +35,7 @@ public class FilmDAO {
 					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
 					"postgres");
 
-			String query = "select id, libelle, duree, datesortie from video";
+			String query = "select id, libell, duree, datesortie from video";
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(query);
 			while (resultSet.next()) {
@@ -43,7 +48,7 @@ public class FilmDAO {
 			}
 
 		} catch (SQLException e) {
-			throw new RuntimeException("probleme de connection", e);
+			throw new VideoDBPersistenceException(e);
 		} finally {
 			try {
 
@@ -58,7 +63,7 @@ public class FilmDAO {
 				}
 
 			} catch (SQLException e) {
-				throw new RuntimeException("probleme de deconnection", e);
+				throw new VideoDBPersistenceException(e);
 			}
 		}
 

@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.management.RuntimeErrorException;
+
+import fr.imie.videodb.exception.VideoDBPresentationException;
 import fr.imie.videodb.presentation.Appli;
 
 /**
@@ -25,7 +28,11 @@ public class MainVideo {
 	 */
 	public static void main(String[] args) {
 		Appli appli = new Appli();
-		appli.start();
+		try {
+			appli.start();
+		} catch (VideoDBPresentationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

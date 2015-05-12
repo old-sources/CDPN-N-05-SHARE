@@ -4,21 +4,34 @@ import java.util.List;
 import java.util.Scanner;
 
 import fr.imie.videodb.dao.FilmDAO;
+import fr.imie.videodb.dao.IFilmDAO;
 import fr.imie.videodb.dto.FilmDTO;
+import fr.imie.videodb.exception.VideoDBPersistenceException;
+import fr.imie.videodb.exception.VideoDBPresentationException;
 
 public class Appli {
+	
+	IFilmDAO filmDAO;
 
-	public void start() {
+	public Appli() {
+		super();
+		filmDAO = new FilmDAO();
+	}
+
+	public void start() throws VideoDBPresentationException {
 		Scanner scanner = null;
 		scanner = new Scanner(System.in);
 		Boolean finAppli = false;
-		FilmDAO filmDAO = null;
-		filmDAO = new FilmDAO();
 
 		do {
 
 			Integer numLigne = 1;
-			List<FilmDTO> films = filmDAO.findAllFilm();
+			List<FilmDTO> films;
+			try {
+				films = filmDAO.findAllFilm();
+			} catch (VideoDBPersistenceException e1) {
+				throw new VideoDBPresentationException(e1);
+			}
 			System.out.println("saisir le numero de la video à afficher");
 			for (FilmDTO filmDTO : films) {
 				System.out.format("%d : %s \n", numLigne, filmDTO.getLibelle());

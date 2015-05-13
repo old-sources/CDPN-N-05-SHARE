@@ -35,32 +35,37 @@ public class Appli {
 			System.out.println("-----------");
 			System.out.println("1:voir tous les films");
 			System.out.println("2:créer un films");
+			System.out.println("3:rechercher un film");
 			numMenu = numericInput(scanner);
 
 			if (numMenu == 0) {
 				finAppli = true;
 			} else {
+				FilmDTO filmDTO;
 				switch (numMenu) {
 				case 1:
 					displayAllFilm();
 					break;
 				case 2:
-					System.out.print("libelle : ");
-					String libelle = scanner.nextLine();
-					System.out.print("date : ");
-					Date dateSortie = dateInput(scanner);
-					System.out.print("duree : ");
-					Integer duree = numericInput(scanner);
-					FilmDTO filmDTO = new FilmDTO();
-					filmDTO.setLibelle(libelle);
-					filmDTO.setDuree(duree);
-					filmDTO.setDateSortie(dateSortie);
+					filmDTO = inputFilm(scanner);
 					try {
 						filmDTO = filmDAO.createFilm(filmDTO);
 					} catch (VideoDBPersistenceException e) {
 						throw new VideoDBPresentationException(e);
 					}
-					System.out.format("film créé : %s",displayVideo(filmDTO));
+					System.out.format("film créé : %s", displayVideo(filmDTO));
+					break;
+				case 3:
+					filmDTO = inputFilm(scanner);
+					List<FilmDTO> filmDTOs;
+					try {
+						filmDTOs = filmDAO.findFilmByExample(filmDTO);
+					} catch (VideoDBPersistenceException e) {
+						throw new VideoDBPresentationException(e);
+					}
+					for (FilmDTO filmDTO2 : filmDTOs) {
+						System.out.println(displayVideo(filmDTO2));
+					}
 					break;
 				default:
 					System.out.println("menu invalide");
@@ -72,6 +77,21 @@ public class Appli {
 		} while (!finAppli);
 		scanner.close();
 
+	}
+
+	private FilmDTO inputFilm(Scanner scanner) {
+		System.out.print("libelle : ");
+		String libelle = scanner.nextLine();
+		libelle = libelle.compareTo("") == 0 ? null: libelle;
+		System.out.print("date : ");
+		Date dateSortie = dateInput(scanner);
+		System.out.print("duree : ");
+		Integer duree = numericInput(scanner);
+		FilmDTO filmDTO = new FilmDTO();
+		filmDTO.setLibelle(libelle);
+		filmDTO.setDuree(duree);
+		filmDTO.setDateSortie(dateSortie);
+		return filmDTO;
 	}
 
 	private List<FilmDTO> displayAllFilm() throws VideoDBPresentationException {
@@ -93,29 +113,41 @@ public class Appli {
 	private Integer numericInput(Scanner scanner) {
 		String saisie;
 		Integer intValue = null;
+		Boolean finSaisie=false;
 		do {
 			saisie = scanner.nextLine();
-			try {
-				intValue = Integer.valueOf(saisie);
-			} catch (NumberFormatException e) {
-				System.out.println("saisie numerique svp");
+			if (saisie.compareTo("") != 0) {
+				try {
+					intValue = Integer.valueOf(saisie);
+					finSaisie=true;
+				} catch (NumberFormatException e) {
+					System.out.println("saisie numerique svp");
+				}
+			}else{
+				finSaisie=true;
 			}
-		} while (intValue == null);
+		} while (!finSaisie);
 		return intValue;
 	}
 
 	private Date dateInput(Scanner scanner) {
 		String saisie;
 		Date dateValue = null;
+		Boolean finSaisie=false;
 		do {
 			saisie = scanner.nextLine();
-			try {
-				dateValue = simpleDateFormat.parse(saisie);
-			} catch (ParseException e) {
-				System.out.println("saisie date svp");
+			if (saisie.compareTo("") != 0) {
+				try {
+					dateValue = simpleDateFormat.parse(saisie);
+					finSaisie=true;
+				} catch (ParseException e) {
+					System.out.println("saisie date svp");
+				}
+			}else {
+				finSaisie=true;
 			}
 
-		} while (dateValue == null);
+		} while (!finSaisie);
 		return dateValue;
 	}
 

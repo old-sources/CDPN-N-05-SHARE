@@ -12,7 +12,9 @@ public class TennisRuleTest {
 	private Jeu jeu;
 	@Before
 	public void initJeux(){
+		ISerialiser serialiser = new StateLessMockedSerialiser();
 		jeu = new Jeu();
+		jeu.setSerialiser(serialiser);
 	}
 	
 	@Test
@@ -90,6 +92,48 @@ public class TennisRuleTest {
 		jeu.marquerJoueur1();
 		//Assert
 		assertEquals("av J1",jeu.getScore());
+	}
+	
+	@Test
+	public void testResetForSuccessEgalite(){
+		//Arrange
+		joueursToEquality();
+		//Act
+		jeu.reset();
+		//Assert
+		assertEquals("0-0",jeu.getScore());
+		
+	}
+	
+	@Test
+	public void testSaveAndLoadForSuccessEgalite(){
+		//Arrange
+		joueursToEquality();
+		jeu.saveJeu();
+		jeu.reset();
+		//Act
+		jeu.loadJeu();
+		//Assert
+		assertEquals("égalité",jeu.getScore());
+		
+	}
+	
+	@Test
+	public void testSaveAndLoadTwiceForSuccess40_0(){
+		//Arrange
+		joueursToEquality();
+		jeu.saveJeu();
+		jeu.reset();
+		jeu.loadJeu();
+		jeu.reset();
+		joueur1To40();
+		jeu.saveJeu();
+		jeu.reset();
+		//Act
+		jeu.loadJeu();
+		//Assert
+		assertEquals("40-0",jeu.getScore());
+		
 	}
 	
 	private void joueursToEquality() {

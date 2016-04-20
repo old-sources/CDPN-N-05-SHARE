@@ -1,11 +1,11 @@
-package org.imie;
+package fr.imie;
 
-import org.imie.Jeux;
+import fr.imie.Jeu;
 
 public interface ISerialiser {
 
-	public abstract void persist(Jeux jeux);
+	public abstract void persist(Jeu jeu);
 
-	public abstract Jeux read();
+	public abstract Jeu read();
 
 }

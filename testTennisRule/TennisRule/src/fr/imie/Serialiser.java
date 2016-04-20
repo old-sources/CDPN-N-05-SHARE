@@ -1,4 +1,4 @@
-package org.imie;
+package fr.imie;
 
 
 import java.io.FileInputStream;
@@ -7,21 +7,19 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import javax.inject.Named;
 
-@Named("serialiser")
 public class Serialiser implements ISerialiser {
 	/* (non-Javadoc)
 	 * @see org.imie.testTDDTennis.ISerialiser#persist(org.imie.testTDDTennis.Jeux)
 	 */
 	@Override
-	public void persist(Jeux jeux)  {
+	public void persist(Jeu jeu)  {
 		ObjectOutputStream oos = null;
 		FileOutputStream fichier;
 		try {
 			fichier = new FileOutputStream("jeux.ser");
 			oos = new ObjectOutputStream(fichier);
-			oos.writeObject(jeux);
+			oos.writeObject(jeu);
 			oos.flush();
 			oos.close();
 		} catch (IOException e) {
@@ -39,14 +37,14 @@ public class Serialiser implements ISerialiser {
 	 * @see org.imie.testTDDTennis.ISerialiser#read()
 	 */
 	@Override
-	public Jeux read()  {
+	public Jeu read()  {
 		ObjectInputStream ois = null;
 		FileInputStream fichier;
-		Jeux retour;
+		Jeu retour;
 		try {
 			fichier = new FileInputStream("jeux.ser");
 			ois = new ObjectInputStream(fichier);
-			retour = (Jeux) ois.readObject();
+			retour = (Jeu) ois.readObject();
 			ois.close();
 		} catch (IOException | ClassNotFoundException e) {
 			try {

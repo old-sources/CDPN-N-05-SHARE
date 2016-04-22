@@ -15,7 +15,7 @@ import fr.imie.videodb.exception.VideoDBPersistenceException;
  * @author imie
  *
  */
-public class ExemplaireDAO implements IExemplaireDAO {
+public class ExemplaireDAO extends ADAO implements IExemplaireDAO {
 
 	/* (non-Javadoc)
 	 * @see fr.imie.videodb.dao.IExemplaireDAO#deleteExemplaire(fr.imie.videodb.dto.ExemplaireDTO)
@@ -24,9 +24,7 @@ public class ExemplaireDAO implements IExemplaireDAO {
 	public void deleteExemplaire(ExemplaireDTO exemplaireDTO) throws VideoDBPersistenceException {
 		Connection connection = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			deleteExemplaire(exemplaireDTO,connection);
 

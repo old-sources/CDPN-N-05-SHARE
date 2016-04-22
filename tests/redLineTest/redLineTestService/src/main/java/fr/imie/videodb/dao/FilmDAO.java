@@ -15,6 +15,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import fr.imie.videodb.dto.ExemplaireDTO;
 import fr.imie.videodb.dto.FilmDTO;
 import fr.imie.videodb.exception.VideoDBPersistenceException;
@@ -23,7 +24,8 @@ import fr.imie.videodb.exception.VideoDBPersistenceException;
  * @author imie
  *
  */
-public class FilmDAO implements IFilmDAO {
+//@RequestScoped
+public class FilmDAO extends ADAO implements IFilmDAO{
 
 	/*
 	 * (non-Javadoc)
@@ -38,9 +40,7 @@ public class FilmDAO implements IFilmDAO {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			String query = "select id, libelle, duree, datesortie from video";
 			statement = connection.createStatement();
@@ -101,9 +101,7 @@ public class FilmDAO implements IFilmDAO {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			String query = "INSERT INTO video(libelle, duree, datesortie) VALUES (?, ?, ?) returning id, libelle, duree, datesortie";
 			statement = connection.prepareStatement(query);
@@ -156,9 +154,7 @@ public class FilmDAO implements IFilmDAO {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			String query = "select id,libelle,datesortie,duree from video ";
 			Boolean firstCriteria = true;
@@ -244,9 +240,7 @@ public class FilmDAO implements IFilmDAO {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			String query = "delete from video where id=?";
 
@@ -284,9 +278,7 @@ public class FilmDAO implements IFilmDAO {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			String query = "UPDATE video SET libelle=?, duree=?, datesortie=? WHERE id=? returning id, libelle, duree, datesortie";
 			statement = connection.prepareStatement(query);
@@ -340,9 +332,7 @@ public class FilmDAO implements IFilmDAO {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			connection.setAutoCommit(false);
 			String query = "select id, libelle, duree, datesortie from video";
@@ -412,9 +402,7 @@ public class FilmDAO implements IFilmDAO {
 		ResultSet resultSet = null;
 		IExemplaireDAO exemplaireDAO = new ExemplaireDAO();
 		try {
-			connection = DriverManager.getConnection(
-					"jdbc:postgresql://localhost:5432/videotheque", "postgres",
-					"postgres");
+			connection = getConnection();
 
 			connection.setAutoCommit(false);
 			String queryUpdate = "UPDATE video SET epuise=true WHERE id=?";

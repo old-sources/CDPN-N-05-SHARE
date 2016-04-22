@@ -3,6 +3,7 @@ group='imie'
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.6
 
@@ -11,6 +12,19 @@ repositories {
     mavenCentral()
 }
 
+test{
+    outputs.upToDateWhen { false }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination "${buildDir}/jacocoHtml"
+    }
+}
+
+build.dependsOn(jacocoTestReport)
 
 dependencies {
   testCompile 'junit:junit:4.+'

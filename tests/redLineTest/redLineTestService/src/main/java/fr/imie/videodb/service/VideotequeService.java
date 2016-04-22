@@ -34,6 +34,9 @@ public class VideotequeService implements IVideotequeService {
 
 	@Override
 	public List<FilmDTO> createSequel(FilmDTO filmDTO) {
+		if(filmDTO.getLibelle().contains("Batman for ever")){
+			throw new RuntimeException("pas de suite pour batman");
+		}
 		List<FilmDTO> out = null;
 		try {
 			List<FilmDTO> films = filmDAO.findFilmByExample(filmDTO);

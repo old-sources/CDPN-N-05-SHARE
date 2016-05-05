@@ -43,13 +43,11 @@ dependencies {
  testRuntime 'org.seleniumhq.selenium:selenium-support:2.+'
 }
 
-
 test.ignoreFailures=true
 
 test{
     outputs.upToDateWhen { false }
 }
-
 
 deployConfig {
     deployFile = "scripts/deploy" // list of files to deploy

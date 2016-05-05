@@ -1,0 +1,44 @@
+version = '1.0.0-SNAPSHOT'
+group='imie'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+sourceCompatibility = 1.8
+
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+	manifest {
+		attributes 'Main-Class': 'fr.imie.game.Main'
+	}
+}
+
+test{
+    outputs.upToDateWhen { false }
+}	
+
+dependencies {
+  testCompile 'junit:junit:4.+'
+  testCompile 'org.mockito:mockito-core:1.+'
+  compile 'javax:javaee-api:7.0'
+}
+
+configurations {
+    api
+}
+
+dependencies {
+    api(
+    	'org.mockito:mockito-core:1.+'
+    )
+}
+
+task extractApi(type: Copy) {
+    from { // use of closure defers evaluation until execution time
+        configurations.api.collect { zipTree(it) }
+    } 
+    into "$buildDir/api/"
+}

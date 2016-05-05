@@ -1,0 +1,64 @@
+version = '1.0.0-SNAPSHOT'
+group='imie'
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
+apply plugin: 'eclipse'
+apply plugin: 'com.github.nikit.cpp.wildfly.deploy'
+
+sourceCompatibility = 1.8
+
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+        maven {
+            url 'https://dl.bintray.com/nikit007/mvn-repo/'
+        }
+
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.nikit.cpp:wildflyDeployPlugin:1.0.7"
+    }
+}
+
+
+
+repositories {
+    mavenCentral()
+}
+
+	
+war {
+ from 'WebContent' 
+}
+
+dependencies {
+ compile(project(':TennisRulesService'))
+ providedCompile 'javax:javaee-api:7.0'
+ testCompile 'junit:junit:4.+'
+ testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:2.+'
+ testRuntime 'org.seleniumhq.selenium:selenium-support:2.+'
+}
+
+
+test.ignoreFailures=true
+
+test{
+    outputs.upToDateWhen { false }
+}
+
+
+deployConfig {
+    deployFile = "scripts/deploy" // list of files to deploy
+    jbossHome = "/opt/wildfly/"
+    boxes = [
+        'Local' : [
+            wildfly:new helpers.Server()
+        ]
+    ]
+}
+test.dependsOn deployLocal
+deployLocal.dependsOn undeployLocal
